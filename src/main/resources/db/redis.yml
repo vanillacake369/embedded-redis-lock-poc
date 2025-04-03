@@ -1,0 +1,8 @@
+spring:
+  data:
+    # Redis 설정
+    redis:
+      host: localhost
+      port: 6379
+      password:
+      timeout: 600
