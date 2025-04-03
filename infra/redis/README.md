@@ -1,0 +1,1 @@
+[해당 블로그](https://velog.io/@greentea/docker%EB%A1%9C-redis-sentinel-%EB%9D%84%EC%9B%8C%EB%B3%B4%EA%B8%B0) 참고

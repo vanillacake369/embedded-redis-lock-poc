@@ -1,0 +1,58 @@
+version: '3.8'
+services:
+  master:
+    image: redis:latest
+    container_name: master
+    volumes:
+      - ./master.conf:/usr/local/etc/redis/redis.conf
+    command: redis-server /usr/local/etc/redis/redis.conf
+    ports:
+      - "6379:6379"
+      - "6380:6380"
+      - "6381:6381"
+      - "5000:5000"
+      - "5001:5001"
+      - "5002:5002"
+  redis-1:
+    image: redis:latest
+    network_mode: "service:master"
+    container_name: slave-1
+    volumes:
+      - ./slave:/slave
+    command: redis-server /slave/slave-1.conf
+
+  redis-2:
+    network_mode: "service:master"
+    image: redis:latest
+    container_name: slave-2
+    volumes:
+      - ./slave:/slave
+    command: redis-server /slave/slave-2.conf
+
+  sentinel-1:
+    network_mode: "service:master"
+    image: redis:latest
+    container_name: sentinel-1
+    volumes:
+      - ./sentinel:/sentinel
+    command: redis-server /sentinel/sentinel-1.conf --sentinel
+    depends_on:
+      - master
+  sentinel-2:
+    network_mode: "service:master"
+    image: redis:latest
+    container_name: sentinel-2
+    volumes:
+      - ./sentinel:/sentinel
+    command: redis-server /sentinel/sentinel-2.conf --sentinel
+    depends_on:
+      - master
+  sentinel-3:
+    network_mode: "service:master"
+    image: redis:latest
+    container_name: sentinel-3
+    volumes:
+      - ./sentinel:/sentinel
+    command: redis-server /sentinel/sentinel-3.conf --sentinel
+    depends_on:
+      - master
