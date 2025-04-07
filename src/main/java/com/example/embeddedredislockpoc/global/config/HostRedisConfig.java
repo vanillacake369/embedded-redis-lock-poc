@@ -13,6 +13,7 @@ import org.springframework.boot.autoconfigure.data.redis.RedisProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
+import org.springframework.context.annotation.Profile;
 import org.springframework.data.redis.connection.ReactiveRedisConnectionFactory;
 import org.springframework.data.redis.connection.RedisClusterConfiguration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
@@ -26,8 +27,11 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 @RequiredArgsConstructor
 @EnableRedisRepositories
+@Profile({"container","embedded"})
 public class HostRedisConfig {
 
+    private final static int REDIS_SERVER_MAX_MEMORY = 128;
+    private final static String REDIS_SERVER_MAX_MEMORY_SETTING = String.format("maxmemory %dM", REDIS_SERVER_MAX_MEMORY);
     private final RedisProperties redisProperties;
 
     private LettuceConnectionFactory createClusterConnection() {
@@ -91,11 +95,20 @@ public class HostRedisConfig {
     }
 
     @Bean
+    public StringRedisSerializer stringSerializer() {
+        return new StringRedisSerializer();
+    }
+
+    @Bean
     @ConditionalOnSingleCandidate(RedisConnectionFactory.class)
     public RedisTemplate<?, ?> redisTemplate(RedisConnectionFactory redisConnectionFactory) {
         RedisTemplate<byte[], byte[]> redisTemplate = new RedisTemplate<>();
         redisTemplate.setConnectionFactory(redisConnectionFactory);
+        redisTemplate.setHashValueSerializer(new StringRedisSerializer());
         redisTemplate.setKeySerializer(new StringRedisSerializer());
+        redisTemplate.setValueSerializer(new StringRedisSerializer());
+        redisTemplate.setHashKeySerializer(new StringRedisSerializer());
+        redisTemplate.afterPropertiesSet();
         return redisTemplate;
     }
 }
