@@ -1,6 +1,6 @@
 spring:
   application:
     name: embedded-redis-lock-poc
-  config:
-    import:
-      - classpath:db/redis.yml
+  profiles:
+    active: container
+#    active: embedded
