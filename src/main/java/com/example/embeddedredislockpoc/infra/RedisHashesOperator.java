@@ -3,7 +3,9 @@ package com.example.embeddedredislockpoc.infra;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.redis.core.HashOperations;
 import org.springframework.data.redis.core.RedisCallback;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
@@ -11,6 +13,8 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class RedisHashesOperator {
+
+    private final HashOperations<String, Object, Object> hashOperations;
 
     private final RedisTemplate<String, Object> redisTemplate;
 
@@ -40,5 +44,9 @@ public class RedisHashesOperator {
             });
         } catch (Exception ignored) {
         }
+    }
+
+    public void putAll(String venueId, Map<String, String> reservedSeats) {
+        hashOperations.putAll(venueId, reservedSeats);
     }
 }
