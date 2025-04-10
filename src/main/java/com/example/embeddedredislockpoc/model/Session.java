@@ -2,7 +2,7 @@ package com.example.embeddedredislockpoc.model;
 
 import java.util.List;
 
-public record Venue(
+public record Session(
     String venueId,
     List<Seat> seats
 ) {
