@@ -49,4 +49,9 @@ public class RedisHashesOperator {
     public void putAll(String venueId, Map<String, String> reservedSeats) {
         hashOperations.putAll(venueId, reservedSeats);
     }
+
+    public void find(String hashKey, String fieldKey) {
+        Object o = hashOperations.get(hashKey, fieldKey);
+        System.out.println("o = " + o);
+    }
 }
